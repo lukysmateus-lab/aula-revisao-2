@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Class: Lessons 4A & 4C</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .title-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Slide Sections */
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem 2rem;
+            position: relative;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Smart Inputs */
+        .smart-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #475569;
+            color: #f8fafc;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .smart-input:focus {
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .input-correct {
+            border-color: #22c55e !important;
+            background-color: rgba(34, 197, 94, 0.2) !important;
+            color: #4ade80 !important;
+        }
+        .input-incorrect {
+            border-color: #ef4444 !important;
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            color: #f87171 !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* Matching Game Styles (Vocab) */
+        .match-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.95rem;
+        }
+        .match-btn:hover:not(.matched):not(.selected) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #64748b;
+        }
+        .match-btn.selected {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.2);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+        .match-btn.matched {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            cursor: default;
+            opacity: 0.5;
+        }
+        .match-btn.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            animation: shake 0.4s;
+        }
+
+        /* Dropdown styling */
+        .dropzone {
+            display: inline-block;
+            min-width: 180px;
+            border-bottom: 2px dashed #94a3b8;
+            padding: 0 10px;
+            color: #a855f7;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+        }
+        .drop-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 50;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            flex-direction: column;
+            gap: 5px;
+            width: max-content;
+        }
+        .drop-options button {
+            padding: 5px 15px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            color: #e2e8f0;
+        }
+        .drop-options button:hover {
+            background: #334155;
+            color: #a855f7;
+        }
+
+        /* Nav Dots */
+        .sticky-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #475569;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-dot:hover, .nav-dot.active {
+            background-color: #f59e0b;
+            transform: scale(1.5);
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        .nav-dot span {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .nav-dot:hover span {
+            opacity: 1;
+        }
+
+        /* Grammar Card hover */
+        .grammar-card {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+        }
+        .grammar-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Star Rating */
+        .star-rating i {
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .star-rating i:hover {
+            transform: scale(1.2);
+        }
+        .star-selected {
+            color: #f59e0b !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Watermark Logo -->
+    <img src="June 15th- review class part 1.png" alt="Leonardo Da Vinci Logo" class="fixed top-6 left-6 md:left-10 w-32 md:w-48 opacity-20 z-0 pointer-events-none rounded shadow-sm mix-blend-screen">
+
+    <!-- Navigation -->
+    <div class="sticky-nav">
+        <a href="#intro" class="nav-dot active"><span>Intro</span></a>
+        <a href="#vocab" class="nav-dot"><span>TV Vocabulary</span></a>
+        <a href="#future" class="nav-dot"><span>Future Plans</span></a>
+        <a href="#compound" class="nav-dot"><span>Compound Adjectives</span></a>
+        <a href="#comparatives-rules" class="nav-dot"><span>Comparative Rules</span></a>
+        <a href="#comparatives" class="nav-dot"><span>Emphasizing Comparatives</span></a>
+        <a href="#closing" class="nav-dot"><span>Exit Ticket</span></a>
+    </div>
+
+    <section id="intro" class="slide-section bg-gradient-to-br from-slate-900 via-orange-900/40 to-slate-900 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block bg-white/10 px-6 py-2 rounded-full border border-white/20 text-orange-400 font-bold tracking-widest uppercase mb-6 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                <i class="fas fa-rocket mr-2"></i> Interactive Study Hub
+            </div>
+            <h1 class="text-6xl md:text-8xl font-extrabold mb-6 title-font text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 drop-shadow-lg">
+                Review Class 2
+            </h1>
+            <p class="text-2xl text-slate-300 mb-10 font-light">Lessons 4A & 4C</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
+                <div class="bg-slate-800/60 p-6 rounded-2xl border border-orange-500/30 backdrop-blur-sm">
+                    <h3 class="text-xl font-bold text-orange-400 mb-3"><i class="fas fa-tv mr-2"></i> Lesson 4A</h3>
+                    <p class="text-slate-300">TV Programs & Future Plans (Will, Going to, Present Cont.)</p>
+                </div>
+                <div class="bg-slate-800/60 p-6 rounded-2xl border border-red-500/30 backdrop-blur-sm">
+                    <h3 class="text-xl font-bold text-red-400 mb-3"><i class="fas fa-comments mr-2"></i> Lesson 4C</h3>
+                    <p class="text-slate-300">Compound Adjectives & Emphasizing Comparatives</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 animate-bounce">
+                <p class="text-slate-400 text-sm uppercase tracking-widest mb-2">Scroll to start</p>
+                <i class="fas fa-chevron-down text-2xl text-orange-500"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="vocab" class="slide-section bg-slate-900 relative z-10">
+        <div class="max-w-5xl mx-auto w-full">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-bold title-font text-orange-400 mb-4"><i class="fas fa-puzzle-piece mr-3"></i> TV Vocabulary</h2>
+                <p class="text-slate-400 text-lg">Click a word on the left, then find its definition on the right.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Left Column (Words) -->
+                <div class="col-span-1 md:col-span-4 space-y-3 flex flex-col" id="col-words">
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v1">Contestants</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v2">Episodes</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v3">Host</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v4">Participant</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v5">Prime time</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v6">Producers</button>
+                    <button class="match-btn word-item text-center font-bold text-lg" data-id="v7">Season</button>
+                </div>
+
+                <!-- Right Column (Definitions) -->
+                <div class="col-span-1 md:col-span-8 space-y-3 flex flex-col" id="col-defs">
+                    <button class="match-btn def-item" data-match="v3">A person who introduces guests, interviews people.</button>
+                    <button class="match-btn def-item" data-match="v5">The evening hours (typically 8:00 PM to 11:00 PM).</button>
+                    <button class="match-btn def-item" data-match="v4">A general term for anyone who takes part or is involved in an activity, event, or show.</button>
+                    <button class="match-btn def-item" data-match="v2">Parts of a longer broadcast series, usually lasting 30 to 60 minutes.</button>
+                    <button class="match-btn def-item" data-match="v6">The people responsible for the financial, organizational, and managerial aspects of making a show, movie, or broadcast.</button>
+                    <button class="match-btn def-item" data-match="v1">People who compete against each other.</button>
+                    <button class="match-btn def-item" data-match="v7">A specific period of the year during which a regular series of television programs is broadcast.</button>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <div id="vocab-complete" class="hidden animate-bounce text-2xl font-bold text-green-400">
+                    <i class="fas fa-check-circle mr-2"></i> All matched! Great job!
+                </div>
+                <button onclick="resetVocabGame()" class="mt-4 text-slate-500 hover:text-slate-300 underline text-sm">Reset Game</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="future" class="slide-section bg-slate-800 relative z-10">
+        <div class="max-w-6xl mx-auto w-full">
+            <h2 class="text-4xl md:text-5xl font-bold title-font text-white mb-8 text-center">
+                Future Plans
+            </h2>
+            
+            <!-- Grammar Explanation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- WILL -->
+                <div class="grammar-card bg-slate-700 rounded-2xl overflow-hidden border border-slate-600">
+                    <div class="bg-emerald-500 text-white font-extrabold text-2xl p-4 text-center">will</div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">Spontaneous decision</h4>
+                        <p class="text-slate-400 text-sm mb-4">(Dream, Prediction: will + verb)</p>
+                        <div class="bg-slate-800 p-4 rounded-xl text-emerald-300 italic text-sm">
+                            - "Let's have a party!"<br>
+                            - "OK, I <span class="font-bold">will buy</span> drinks."<br><br>
+                            "I will become a pilot."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOING TO -->
+                <div class="grammar-card bg-slate-700 rounded-2xl overflow-hidden border border-slate-600">
+                    <div class="bg-pink-500 text-white font-extrabold text-2xl p-4 text-center">going to</div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">Planned future action</h4>
+                        <p class="text-slate-400 text-sm mb-4">(Intention: be + going to + verb)</p>
+                        <div class="bg-slate-800 p-4 rounded-xl text-pink-300 italic text-sm">
+                            "Mom! Dad! We are <span class="font-bold">going to</span> get married!"<br><br>
+                            "I am going to wash dishes."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRESENT CONTINUOUS -->
+                <div class="grammar-card bg-slate-700 rounded-2xl overflow-hidden border border-slate-600">
+                    <div class="bg-amber-500 text-white font-extrabold text-2xl p-4 text-center">Present Cont.</div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-white mb-2">Future arrangement</h4>
+                        <p class="text-slate-400 text-sm mb-4">(You know date and time: be + verb-ing)</p>
+                        <div class="bg-slate-800 p-4 rounded-xl text-amber-300 italic text-sm">
+                            "We <span class="font-bold">are getting</span> married in June!"<br><br>
+                            "I'm meeting my client at 3 pm."
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice -->
+            <div class="bg-slate-900/50 p-8 rounded-3xl border border-slate-700 shadow-xl">
+                <h3 class="text-2xl font-bold text-emerald-400 mb-6"><i class="fas fa-edit mr-2"></i> Practice: Fill in the blanks</h3>
+                <p class="text-slate-400 mb-6 text-sm">Complete with <strong class="text-white">will</strong>, <strong class="text-white">be going to</strong>, or <strong class="text-white">present continuous</strong>.</p>
+                
+                <div class="space-y-4 text-lg">
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">a)</span>
+                        <p class="flex-1">My friends bought tickets for a match. They <input type="text" id="fut1" class="smart-input mx-2" placeholder="(watch)"> the game at the stadium.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">b)</span>
+                        <p class="flex-1">A: I can't carry these. B: Don't worry, I <input type="text" id="fut2" class="smart-input mx-2" placeholder="(help)"> you.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">c)</span>
+                        <p class="flex-1">We already have plane tickets. We <input type="text" id="fut3" class="smart-input mx-2" placeholder="(visit)"> Rio during the holidays.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">d)</span>
+                        <p class="flex-1">Sofia can't go tomorrow because she <input type="text" id="fut4" class="smart-input mx-2" placeholder="(take)"> an exam in the afternoon.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">e)</span>
+                        <p class="flex-1">My cousins packed their bags. They <input type="text" id="fut5" class="smart-input mx-2" placeholder="(travel)"> to Salvador next Friday.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">f)</span>
+                        <p class="flex-1">A: I forgot my notebook. B: That's okay. I <input type="text" id="fut6" class="smart-input mx-2" placeholder="(lend)"> you some paper.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">g)</span>
+                        <p class="flex-1">We made all the arrangements. We <input type="text" id="fut7" class="smart-input mx-2" placeholder="(stay)"> at a beach resort.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <span class="text-slate-500 font-bold">h)</span>
+                        <p class="flex-1">Lucas can't play this evening because he <input type="text" id="fut8" class="smart-input mx-2" placeholder="(meet)"> his dentist at 6 p.m.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button onclick="checkFuture()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+                        Check Future Plans
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="compound" class="slide-section bg-gradient-to-br from-purple-900 to-slate-900 relative z-10">
+        <div class="max-w-4xl mx-auto w-full">
+            <h2 class="text-4xl font-bold title-font text-purple-400 mb-8 text-center">
+                Compound Adjectives
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10 text-center text-lg font-bold">
+                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                    <span class="text-white">well-</span><span class="text-purple-400">mannered</span>
+                </div>
+                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                    <span class="text-white">well-</span><span class="text-purple-400">known</span>
+                </div>
+                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                    <span class="text-white">short-</span><span class="text-purple-400">tempered</span>
+                </div>
+                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                    <span class="text-white">thought-</span><span class="text-purple-400">provoking</span>
+                </div>
+                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                    <span class="text-white">best-</span><span class="text-purple-400">selling</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 p-8 rounded-3xl border border-slate-700 shadow-2xl">
+                <h3 class="text-2xl font-bold text-white mb-6"><i class="fas fa-list-check text-purple-400 mr-2"></i> Practice</h3>
+                <p class="text-slate-400 mb-6">Click the blanks to choose the correct adjective.</p>
+                
+                <div class="space-y-6 text-xl leading-relaxed">
+                    <!-- a -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <p>a) The documentary was very 
+                            <span class="relative inline-block">
+                                <span class="dropzone" onclick="toggleDropdown('drop-a')" id="lbl-adj-a">Choose...</span>
+                                <div id="drop-a" class="drop-options">
+                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'thought-provoking')">thought-provoking</button>
+                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'well-mannered')">well-mannered</button>
+                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'short-tempered')">short-tempered</button>
+                                </div>
+                            </span>. It made me think about environmental problems for days.
+                        </p>
+                    </div>
+
+                    <!-- b -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <p>b) My little cousins are always polite and say "please" and "thank you." They are very 
+                            <span class="relative inline-block">
+                                <span class="dropzone" onclick="toggleDropdown('drop-b')" id="lbl-adj-b">Choose...</span>
+                                <div id="drop-b" class="drop-options">
+                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'best-selling')">best-selling</button>
+                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'well-mannered')">well-mannered</button>
+                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'well-known')">well-known</button>
+                                </div>
+                            </span>.
+                        </p>
+                    </div>
+
+                    <!-- c -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <p>c) That singer is 
+                            <span class="relative inline-block">
+                                <span class="dropzone" onclick="toggleDropdown('drop-c')" id="lbl-adj-c">Choose...</span>
+                                <div id="drop-c" class="drop-options">
+                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'well-known')">well-known</button>
+                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'short-tempered')">short-tempered</button>
+                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'thought-provoking')">thought-provoking</button>
+                                </div>
+                            </span> all over the world and has millions of fans.
+                        </p>
+                    </div>
+
+                    <!-- d -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <p>d) My neighbor can be 
+                            <span class="relative inline-block">
+                                <span class="dropzone" onclick="toggleDropdown('drop-d')" id="lbl-adj-d">Choose...</span>
+                                <div id="drop-d" class="drop-options">
+                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'best-selling')">best-selling</button>
+                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'well-mannered')">well-mannered</button>
+                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'short-tempered')">short-tempered</button>
+                                </div>
+                            </span>. He gets upset when things don't go as planned.
+                        </p>
+                    </div>
+
+                    <!-- e -->
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+                        <p>e) The writer became famous after publishing a 
+                            <span class="relative inline-block">
+                                <span class="dropzone" onclick="toggleDropdown('drop-e')" id="lbl-adj-e">Choose...</span>
+                                <div id="drop-e" class="drop-options">
+                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'thought-provoking')">thought-provoking</button>
+                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'best-selling')">best-selling</button>
+                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'well-known')">well-known</button>
+                                </div>
+                            </span> book.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-10 text-center">
+                    <button onclick="checkAdjectives()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+                        Check Adjectives
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparatives-rules" class="slide-section bg-slate-800 relative z-10">
+        <div class="max-w-5xl mx-auto w-full">
+            <h2 class="text-4xl md:text-5xl font-bold title-font text-rose-500 mb-4 text-center">
+                Comparative Adjectives
+            </h2>
+            <p class="text-center text-slate-300 mb-10 text-lg">Let's review how to form comparatives before emphasizing them.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Short Adjectives -->
+                <div class="bg-slate-700 p-6 rounded-2xl border-t-4 border-emerald-500 shadow-xl transform transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold text-emerald-400 mb-3 text-center">Short Adjectives</h3>
+                    <div class="text-center mb-6">
+                        <span class="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded font-bold text-sm tracking-wider uppercase">Add -er</span>
+                    </div>
+                    <ul class="space-y-4 text-lg font-medium text-slate-300">
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>tall</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-emerald-400 font-bold">taller</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>nice</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-emerald-400 font-bold">nicer</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>big</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-emerald-400 font-bold">bigger</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>heavy</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-emerald-400 font-bold">heavier</span></li>
+                    </ul>
+                </div>
+
+                <!-- Long Adjectives -->
+                <div class="bg-slate-700 p-6 rounded-2xl border-t-4 border-purple-500 shadow-xl transform transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold text-purple-400 mb-3 text-center">Long Adjectives</h3>
+                    <div class="text-center mb-6">
+                        <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded font-bold text-sm tracking-wider uppercase">Add more</span>
+                    </div>
+                    <ul class="space-y-4 text-lg font-medium text-slate-300">
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>expensive</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-purple-400 font-bold text-right leading-tight">more<br>expensive</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>beautiful</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-purple-400 font-bold text-right leading-tight">more<br>beautiful</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>intelligent</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-purple-400 font-bold text-right leading-tight">more<br>intelligent</span></li>
+                    </ul>
+                </div>
+
+                <!-- Irregular Adjectives -->
+                <div class="bg-slate-700 p-6 rounded-2xl border-t-4 border-amber-500 shadow-xl transform transition hover:-translate-y-2">
+                    <h3 class="text-2xl font-bold text-amber-400 mb-3 text-center">Irregular</h3>
+                    <div class="text-center mb-6">
+                        <span class="bg-amber-500/20 text-amber-300 px-3 py-1 rounded font-bold text-sm tracking-wider uppercase">Memorize!</span>
+                    </div>
+                    <ul class="space-y-4 text-lg font-medium text-slate-300">
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>good</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-amber-400 font-bold">better</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>bad</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-amber-400 font-bold">worse</span></li>
+                        <li class="flex items-center justify-between border-b border-slate-600 pb-2"><span>far</span> <i class="fas fa-arrow-right text-slate-500 text-sm"></i> <span class="text-amber-400 font-bold">farther</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- "Than" Reminder -->
+            <div class="bg-emerald-500 text-white rounded-2xl p-6 text-center shadow-lg transform transition hover:scale-105 max-w-2xl mx-auto border-4 border-emerald-400 flex flex-col items-center justify-center gap-2">
+                <p class="text-2xl font-bold">Don't forget to use</p>
+                <div class="text-5xl uppercase tracking-widest bg-white text-emerald-600 px-8 py-3 rounded-xl shadow-inner font-extrabold outline outline-4 outline-emerald-200 mt-2">
+                    than
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparatives" class="slide-section bg-slate-900 relative z-10">
+        <div class="max-w-5xl mx-auto w-full">
+            <h2 class="text-4xl md:text-5xl font-bold title-font text-red-400 mb-8 text-center">
+                Emphasizing Comparatives
+            </h2>
+            
+            <!-- Rules -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="bg-slate-800 p-6 rounded-2xl border-t-4 border-red-500 shadow-lg text-center">
+                    <h4 class="text-xl font-bold text-white mb-2">Big Difference</h4>
+                    <p class="text-red-400 font-extrabold text-2xl mb-2">much / a lot / far</p>
+                    <p class="text-slate-400 text-sm italic">+ comparative</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-2xl border-t-4 border-yellow-500 shadow-lg text-center">
+                    <h4 class="text-xl font-bold text-white mb-2">Small Difference</h4>
+                    <p class="text-yellow-400 font-extrabold text-2xl mb-2">a bit / a little</p>
+                    <p class="text-slate-400 text-sm italic">+ comparative</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-2xl border-t-4 border-blue-500 shadow-lg text-center">
+                    <h4 class="text-xl font-bold text-white mb-2">No Difference</h4>
+                    <p class="text-blue-400 font-extrabold text-2xl mb-2">just as ... as</p>
+                    <p class="text-slate-400 text-sm italic">(No comparative suffix!)</p>
+                </div>
+            </div>
+
+            <!-- Sentence Builder Practice -->
+            <div class="bg-slate-800/50 p-6 md:p-8 rounded-3xl border border-slate-700 shadow-xl">
+                <p class="text-slate-300 mb-6 text-center">Write sentences to emphasise comparatives. Use the hints given.</p>
+                
+                <div class="space-y-6">
+                    <!-- a -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-bolt text-red-500"></i> Big difference</span>
+                            <span class="text-xs text-slate-500">Superman / intelligent / the Joker</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Superman is</span>
+                            <input type="text" id="comp1" class="smart-input mx-2 flex-1 text-center" placeholder="(intelligent)">
+                            <span class="text-white font-bold mr-2">than the Joker.</span>
+                        </div>
+                    </div>
+
+                    <!-- b -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-bolt text-red-500"></i> Big difference</span>
+                            <span class="text-xs text-slate-500">Black Widow / careful / Harley Quinn</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Black Widow is</span>
+                            <input type="text" id="comp2" class="smart-input mx-2 flex-1 text-center" placeholder="(careful)">
+                            <span class="text-white font-bold mr-2">than Harley Quinn.</span>
+                        </div>
+                    </div>
+
+                    <!-- c -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-equals text-blue-500"></i> No difference</span>
+                            <span class="text-xs text-slate-500">Captain America / strong / Thor</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Captain America is</span>
+                            <input type="text" id="comp3" class="smart-input mx-2 flex-1 text-center" placeholder="(strong)">
+                            <span class="text-white font-bold mr-2">as Thor.</span>
+                        </div>
+                    </div>
+
+                    <!-- d -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-compress-alt text-yellow-500"></i> Small difference</span>
+                            <span class="text-xs text-slate-500">Spider-Man / fast / Captain America</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Spider-Man is</span>
+                            <input type="text" id="comp4" class="smart-input mx-2 flex-1 text-center" placeholder="(fast)">
+                            <span class="text-white font-bold mr-2">than Captain America.</span>
+                        </div>
+                    </div>
+
+                    <!-- e -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-equals text-blue-500"></i> No difference</span>
+                            <span class="text-xs text-slate-500">Thor / powerful / Superman</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Thor is</span>
+                            <input type="text" id="comp5" class="smart-input mx-2 flex-1 text-center" placeholder="(powerful)">
+                            <span class="text-white font-bold mr-2">as Superman.</span>
+                        </div>
+                    </div>
+
+                    <!-- f -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-slate-400 text-sm font-bold uppercase"><i class="fas fa-compress-alt text-yellow-500"></i> Small difference</span>
+                            <span class="text-xs text-slate-500">Batman / clever / Spider-Man</span>
+                        </div>
+                        <div class="flex items-center bg-slate-900 rounded-lg p-2 border border-slate-700">
+                            <span class="text-white font-bold ml-2">Batman is</span>
+                            <input type="text" id="comp6" class="smart-input mx-2 flex-1 text-center" placeholder="(clever)">
+                            <span class="text-white font-bold mr-2">than Spider-Man.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="checkComparatives()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+                        Check Sentences
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="closing" class="slide-section bg-gradient-to-t from-slate-900 via-indigo-900/30 to-slate-900 relative z-10">
+        <div class="max-w-5xl mx-auto w-full text-center">
+            
+            <!-- Summary -->
+            <h2 class="text-4xl md:text-5xl font-bold title-font text-emerald-400 mb-6"><i class="fas fa-flag-checkered mr-3"></i> Class Dismissed!</h2>
+            
+            <div class="bg-slate-800/80 p-8 rounded-2xl border border-emerald-500/30 shadow-lg mb-8 max-w-3xl mx-auto text-left">
+                <h3 class="text-2xl font-bold text-white mb-6 text-center border-b border-slate-600 pb-4">Today's Recap</h3>
+                <ul class="space-y-4 text-slate-300 font-medium grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                    <li class="flex items-center gap-3"><i class="fas fa-tv text-emerald-500 text-xl"></i> TV Vocabulary</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-calendar-alt text-emerald-500 text-xl"></i> Future Plans (Will, Going To, Pres. Cont.)</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-puzzle-piece text-emerald-500 text-xl"></i> Compound Adjectives</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-balance-scale-right text-emerald-500 text-xl"></i> Emphasizing Comparatives</li>
+                </ul>
+            </div>
+
+            <!-- Exit Ticket -->
+            <div class="bg-indigo-900/40 p-8 rounded-3xl border border-indigo-500/40 shadow-xl max-w-3xl mx-auto mb-10">
+                <h3 class="text-2xl font-bold text-indigo-300 mb-2"><i class="fas fa-ticket-alt mr-2"></i> Exit Ticket</h3>
+                <p class="text-slate-300 mb-6 text-lg">Before you go, rate today's review and write one sentence about a TV show or movie you are going to watch this weekend. Try to use a <strong>Compound Adjective</strong> or a <strong>Comparative</strong>!</p>
+                
+                <div class="flex justify-center gap-2 mb-6 text-3xl text-slate-500 star-rating" id="star-container">
+                    <i class="fas fa-star" onclick="rateClass(1)"></i>
+                    <i class="fas fa-star" onclick="rateClass(2)"></i>
+                    <i class="fas fa-star" onclick="rateClass(3)"></i>
+                    <i class="fas fa-star" onclick="rateClass(4)"></i>
+                    <i class="fas fa-star" onclick="rateClass(5)"></i>
+                </div>
+
+                <textarea class="w-full bg-slate-800/80 border-2 border-indigo-400/50 rounded-xl p-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 transition-colors resize-none mb-4" rows="3" placeholder="E.g., I am going to watch a well-known series. It is much better than a soap opera..."></textarea>
+                
+                <button onclick="submitExitTicket()" id="exit-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all hover:scale-105">
+                    Submit & Finish
+                </button>
+            </div>
+
+            <!-- Closing Message -->
+            <div id="closing-msg" class="hidden transform transition-all duration-500 scale-95 opacity-0">
+                <p class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 drop-shadow-md mb-4">
+                    Great job today! <br> Happy Studies! 🚀📚
+                </p>
+                <p class="text-slate-400 text-xl font-medium">Bons estudos e até a próxima aula!</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling & active dot update
+        document.querySelectorAll('.nav-dot').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('.slide-section');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 300) {
+                    current = section.getAttribute('id');
+                }
+            });
+            document.querySelectorAll('.nav-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href').substring(1) === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // -------------------------
+        // Vocab Matching Logic
+        // -------------------------
+        let selectedWord = null;
+        let vocabMatchesFound = 0;
+
+        document.querySelectorAll('.word-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('matched')) return;
+                document.querySelectorAll('.word-item').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedWord = this.getAttribute('data-id');
+            });
+        });
+
+        document.querySelectorAll('.def-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.classList.contains('matched')) return;
+                if(!selectedWord) {
+                    this.classList.add('error');
+                    setTimeout(() => this.classList.remove('error'), 400);
+                    return;
+                }
+
+                const matchId = this.getAttribute('data-match');
+                const wordEl = document.querySelector(`.word-item[data-id="${selectedWord}"]`);
+
+                if(selectedWord === matchId) {
+                    // Success
+                    this.classList.add('matched');
+                    wordEl.classList.add('matched');
+                    wordEl.classList.remove('selected');
+                    
+                    // Add badge to definition
+                    const wordText = wordEl.innerText;
+                    this.innerHTML = `<span class="bg-orange-500 text-white rounded px-2 py-1 inline-block mr-2 text-xs font-bold">${wordText}</span>` + this.innerHTML;
+
+                    selectedWord = null;
+                    vocabMatchesFound++;
+
+                    if(vocabMatchesFound === 7) {
+                        document.getElementById('vocab-complete').classList.remove('hidden');
+                    }
+                } else {
+                    // Fail
+                    this.classList.add('error');
+                    wordEl.classList.add('error');
+                    setTimeout(() => {
+                        this.classList.remove('error');
+                        wordEl.classList.remove('error');
+                    }, 400);
+                }
+            });
+        });
+
+        function resetVocabGame() {
+            vocabMatchesFound = 0;
+            selectedWord = null;
+            document.getElementById('vocab-complete').classList.add('hidden');
+            
+            document.querySelectorAll('.match-btn').forEach(btn => {
+                btn.classList.remove('matched', 'selected', 'error');
+                if(btn.classList.contains('def-item')) {
+                    btn.innerHTML = btn.innerHTML.replace(/<span.*<\/span>/, '');
+                }
+            });
+        }
+
+        // -------------------------
+        // Validation Helper
+        // -------------------------
+        function validateInput(id, correctAnswers) {
+            const input = document.getElementById(id);
+            let val = input.value.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,!]/g, '');
+            input.classList.remove('input-correct', 'input-incorrect');
+            
+            if (correctAnswers.includes(val)) {
+                input.classList.add('input-correct');
+            } else {
+                input.classList.add('input-incorrect');
+                input.value = correctAnswers[0]; // Reveal first valid answer
+            }
+        }
+
+        // -------------------------
+        // Future Plans Logic
+        // -------------------------
+        function checkFuture() {
+            validateInput('fut1', ['are going to watch', "'re going to watch", 'are watching']);
+            validateInput('fut2', ['will help', "'ll help"]);
+            validateInput('fut3', ['are going to visit', "'re going to visit", 'are visiting']);
+            validateInput('fut4', ['is taking', "'s taking", 'is going to take']);
+            validateInput('fut5', ['are going to travel', "'re going to travel", 'are traveling', 'are travelling']);
+            validateInput('fut6', ['will lend', "'ll lend"]);
+            validateInput('fut7', ['are staying', "'re staying"]);
+            validateInput('fut8', ['is meeting', "'s meeting"]);
+        }
+
+        // -------------------------
+        // Compound Adjectives Logic
+        // -------------------------
+        function toggleDropdown(id) {
+            document.querySelectorAll('.drop-options').forEach(el => {
+                if(el.id !== id) el.style.display = 'none';
+            });
+            const opt = document.getElementById(id);
+            opt.style.display = opt.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function selectDrop(labelId, optId, value) {
+            const label = document.getElementById(labelId);
+            label.innerText = value;
+            label.classList.remove('text-green-400', 'text-red-400');
+            label.style.borderBottomColor = '#94a3b8';
+            document.getElementById(optId).style.display = 'none';
+        }
+
+        // Close dropdowns if clicked outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropzone') && !event.target.closest('.drop-options')) {
+                document.querySelectorAll('.drop-options').forEach(el => el.style.display = 'none');
+            }
+        });
+
+        const adjAnswers = {
+            'lbl-adj-a': 'thought-provoking',
+            'lbl-adj-b': 'well-mannered',
+            'lbl-adj-c': 'well-known',
+            'lbl-adj-d': 'short-tempered',
+            'lbl-adj-e': 'best-selling'
+        };
+
+        function checkAdjectives() {
+            for(let id in adjAnswers) {
+                const el = document.getElementById(id);
+                let text = el.innerText.trim(); 
+                if(text === adjAnswers[id]) {
+                    el.classList.remove('text-red-400');
+                    el.classList.add('text-green-400');
+                    el.style.borderBottomColor = '#22c55e';
+                } else {
+                    el.innerText = adjAnswers[id];
+                    el.classList.remove('text-green-400');
+                    el.classList.add('text-red-400');
+                    el.style.borderBottomColor = '#ef4444';
+                    el.style.animation = 'shake 0.4s';
+                    setTimeout(()=> el.style.animation = '', 400);
+                }
+            }
+        }
+
+        // -------------------------
+        // Comparatives Logic
+        // -------------------------
+        function checkComparatives() {
+            validateInput('comp1', [
+                'a lot more intelligent', 
+                'much more intelligent', 
+                'far more intelligent'
+            ]);
+            validateInput('comp2', [
+                'far more careful', 
+                'much more careful', 
+                'a lot more careful'
+            ]);
+            validateInput('comp3', [
+                'just as strong'
+            ]);
+            validateInput('comp4', [
+                'a little faster', 
+                'a bit faster'
+            ]);
+            validateInput('comp5', [
+                'just as powerful'
+            ]);
+            validateInput('comp6', [
+                'a bit cleverer', 
+                'a little cleverer',
+                'a bit more clever',
+                'a little more clever'
+            ]);
+        }
+
+        // -------------------------
+        // Exit Ticket Logic
+        // -------------------------
+        function rateClass(stars) {
+            const container = document.getElementById('star-container');
+            const icons = container.querySelectorAll('i');
+            
+            icons.forEach((icon, index) => {
+                if (index < stars) {
+                    icon.classList.add('star-selected');
+                } else {
+                    icon.classList.remove('star-selected');
+                }
+            });
+        }
+
+        function submitExitTicket() {
+            const btn = document.getElementById('exit-btn');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submitted!';
+            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+            btn.classList.add('bg-emerald-500', 'pointer-events-none');
+            
+            const msg = document.getElementById('closing-msg');
+            msg.classList.remove('hidden');
+            
+            // Allow display block to render before applying opacity transition
+            setTimeout(() => {
+                msg.classList.remove('scale-95', 'opacity-0');
+                msg.classList.add('scale-100', 'opacity-100');
+            }, 100);
+        }
+    </script>
+</body>
+</html>

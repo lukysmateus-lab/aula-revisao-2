@@ -106,45 +106,6 @@
             animation: shake 0.4s;
         }
 
-        /* Dropdown styling */
-        .dropzone {
-            display: inline-block;
-            min-width: 180px;
-            border-bottom: 2px dashed #94a3b8;
-            padding: 0 10px;
-            color: #a855f7;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            position: relative;
-        }
-        .drop-options {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 10px;
-            z-index: 50;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            flex-direction: column;
-            gap: 5px;
-            width: max-content;
-        }
-        .drop-options button {
-            padding: 5px 15px;
-            border-radius: 4px;
-            transition: background 0.2s;
-            color: #e2e8f0;
-        }
-        .drop-options button:hover {
-            background: #334155;
-            color: #a855f7;
-        }
-
         /* Nav Dots */
         .sticky-nav {
             position: fixed;
@@ -196,18 +157,6 @@
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
         }
-
-        /* Star Rating */
-        .star-rating i {
-            cursor: pointer;
-            transition: color 0.2s, transform 0.2s;
-        }
-        .star-rating i:hover {
-            transform: scale(1.2);
-        }
-        .star-selected {
-            color: #f59e0b !important;
-        }
     </style>
 </head>
 <body>
@@ -223,9 +172,10 @@
         <a href="#compound" class="nav-dot"><span>Compound Adjectives</span></a>
         <a href="#comparatives-rules" class="nav-dot"><span>Comparative Rules</span></a>
         <a href="#comparatives" class="nav-dot"><span>Emphasizing Comparatives</span></a>
-        <a href="#closing" class="nav-dot"><span>Exit Ticket</span></a>
+        <a href="#summary" class="nav-dot"><span>Exit Ticket</span></a>
     </div>
 
+    <!-- Section 1: Intro -->
     <section id="intro" class="slide-section bg-gradient-to-br from-slate-900 via-orange-900/40 to-slate-900 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
             <div class="inline-block bg-white/10 px-6 py-2 rounded-full border border-white/20 text-orange-400 font-bold tracking-widest uppercase mb-6 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
@@ -254,6 +204,7 @@
         </div>
     </section>
 
+    <!-- Section 2: TV Vocabulary (Matching) -->
     <section id="vocab" class="slide-section bg-slate-900 relative z-10">
         <div class="max-w-5xl mx-auto w-full">
             <div class="text-center mb-10">
@@ -294,6 +245,7 @@
         </div>
     </section>
 
+    <!-- Section 3: Future Plans -->
     <section id="future" class="slide-section bg-slate-800 relative z-10">
         <div class="max-w-6xl mx-auto w-full">
             <h2 class="text-4xl md:text-5xl font-bold title-font text-white mb-8 text-center">
@@ -392,102 +344,75 @@
         </div>
     </section>
 
+    <!-- Section 4: Compound Adjectives -->
     <section id="compound" class="slide-section bg-gradient-to-br from-purple-900 to-slate-900 relative z-10">
         <div class="max-w-4xl mx-auto w-full">
             <h2 class="text-4xl font-bold title-font text-purple-400 mb-8 text-center">
                 Compound Adjectives
             </h2>
             
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10 text-center text-lg font-bold">
-                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+            <!-- Word Bank -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10 text-center text-lg font-bold" id="compound-word-bank">
+                <button class="word-btn bg-slate-800 border-2 border-purple-500/50 p-4 rounded-xl shadow-lg transition-transform hover:scale-105" data-word="well-mannered" onclick="selectCompoundWord(this)">
                     <span class="text-white">well-</span><span class="text-purple-400">mannered</span>
-                </div>
-                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                </button>
+                <button class="word-btn bg-slate-800 border-2 border-purple-500/50 p-4 rounded-xl shadow-lg transition-transform hover:scale-105" data-word="well-known" onclick="selectCompoundWord(this)">
                     <span class="text-white">well-</span><span class="text-purple-400">known</span>
-                </div>
-                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                </button>
+                <button class="word-btn bg-slate-800 border-2 border-purple-500/50 p-4 rounded-xl shadow-lg transition-transform hover:scale-105" data-word="short-tempered" onclick="selectCompoundWord(this)">
                     <span class="text-white">short-</span><span class="text-purple-400">tempered</span>
-                </div>
-                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                </button>
+                <button class="word-btn bg-slate-800 border-2 border-purple-500/50 p-4 rounded-xl shadow-lg transition-transform hover:scale-105" data-word="thought-provoking" onclick="selectCompoundWord(this)">
                     <span class="text-white">thought-</span><span class="text-purple-400">provoking</span>
-                </div>
-                <div class="bg-slate-800 border border-purple-500/50 p-4 rounded-xl shadow-lg">
+                </button>
+                <button class="word-btn bg-slate-800 border-2 border-purple-500/50 p-4 rounded-xl shadow-lg transition-transform hover:scale-105" data-word="best-selling" onclick="selectCompoundWord(this)">
                     <span class="text-white">best-</span><span class="text-purple-400">selling</span>
-                </div>
+                </button>
             </div>
 
             <div class="bg-slate-800/80 p-8 rounded-3xl border border-slate-700 shadow-2xl">
                 <h3 class="text-2xl font-bold text-white mb-6"><i class="fas fa-list-check text-purple-400 mr-2"></i> Practice</h3>
-                <p class="text-slate-400 mb-6">Click the blanks to choose the correct adjective.</p>
+                <p class="text-slate-400 mb-6 bg-slate-900/50 p-3 rounded-lg inline-block border border-slate-700">
+                    <i class="fas fa-mouse-pointer text-purple-400 mr-2"></i> <strong>How to play:</strong> Click a word in the boxes above, then click an empty blank below to place it. Click the blank again to remove it.
+                </p>
                 
                 <div class="space-y-6 text-xl leading-relaxed">
                     <!-- a -->
                     <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
                         <p>a) The documentary was very 
-                            <span class="relative inline-block">
-                                <span class="dropzone" onclick="toggleDropdown('drop-a')" id="lbl-adj-a">Choose...</span>
-                                <div id="drop-a" class="drop-options">
-                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'thought-provoking')">thought-provoking</button>
-                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'well-mannered')">well-mannered</button>
-                                    <button onclick="selectDrop('lbl-adj-a', 'drop-a', 'short-tempered')">short-tempered</button>
-                                </div>
-                            </span>. It made me think about environmental problems for days.
+                            <button class="blank-btn inline-block min-w-[180px] border-b-2 border-dashed border-slate-400 px-2 text-purple-400 font-bold text-center transition-colors" data-id="ans-a" onclick="fillBlank(this)">_____</button>. 
+                            It made me think about environmental problems for days.
                         </p>
                     </div>
 
                     <!-- b -->
                     <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
                         <p>b) My little cousins are always polite and say "please" and "thank you." They are very 
-                            <span class="relative inline-block">
-                                <span class="dropzone" onclick="toggleDropdown('drop-b')" id="lbl-adj-b">Choose...</span>
-                                <div id="drop-b" class="drop-options">
-                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'best-selling')">best-selling</button>
-                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'well-mannered')">well-mannered</button>
-                                    <button onclick="selectDrop('lbl-adj-b', 'drop-b', 'well-known')">well-known</button>
-                                </div>
-                            </span>.
+                            <button class="blank-btn inline-block min-w-[180px] border-b-2 border-dashed border-slate-400 px-2 text-purple-400 font-bold text-center transition-colors" data-id="ans-b" onclick="fillBlank(this)">_____</button>.
                         </p>
                     </div>
 
                     <!-- c -->
                     <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
                         <p>c) That singer is 
-                            <span class="relative inline-block">
-                                <span class="dropzone" onclick="toggleDropdown('drop-c')" id="lbl-adj-c">Choose...</span>
-                                <div id="drop-c" class="drop-options">
-                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'well-known')">well-known</button>
-                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'short-tempered')">short-tempered</button>
-                                    <button onclick="selectDrop('lbl-adj-c', 'drop-c', 'thought-provoking')">thought-provoking</button>
-                                </div>
-                            </span> all over the world and has millions of fans.
+                            <button class="blank-btn inline-block min-w-[180px] border-b-2 border-dashed border-slate-400 px-2 text-purple-400 font-bold text-center transition-colors" data-id="ans-c" onclick="fillBlank(this)">_____</button> 
+                            all over the world and has millions of fans.
                         </p>
                     </div>
 
                     <!-- d -->
                     <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
                         <p>d) My neighbor can be 
-                            <span class="relative inline-block">
-                                <span class="dropzone" onclick="toggleDropdown('drop-d')" id="lbl-adj-d">Choose...</span>
-                                <div id="drop-d" class="drop-options">
-                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'best-selling')">best-selling</button>
-                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'well-mannered')">well-mannered</button>
-                                    <button onclick="selectDrop('lbl-adj-d', 'drop-d', 'short-tempered')">short-tempered</button>
-                                </div>
-                            </span>. He gets upset when things don't go as planned.
+                            <button class="blank-btn inline-block min-w-[180px] border-b-2 border-dashed border-slate-400 px-2 text-purple-400 font-bold text-center transition-colors" data-id="ans-d" onclick="fillBlank(this)">_____</button>. 
+                            He gets upset when things don't go as planned.
                         </p>
                     </div>
 
                     <!-- e -->
                     <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
                         <p>e) The writer became famous after publishing a 
-                            <span class="relative inline-block">
-                                <span class="dropzone" onclick="toggleDropdown('drop-e')" id="lbl-adj-e">Choose...</span>
-                                <div id="drop-e" class="drop-options">
-                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'thought-provoking')">thought-provoking</button>
-                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'best-selling')">best-selling</button>
-                                    <button onclick="selectDrop('lbl-adj-e', 'drop-e', 'well-known')">well-known</button>
-                                </div>
-                            </span> book.
+                            <button class="blank-btn inline-block min-w-[180px] border-b-2 border-dashed border-slate-400 px-2 text-purple-400 font-bold text-center transition-colors" data-id="ans-e" onclick="fillBlank(this)">_____</button> 
+                            book.
                         </p>
                     </div>
                 </div>
@@ -501,6 +426,7 @@
         </div>
     </section>
 
+    <!-- Section 4.5: Comparative Rules -->
     <section id="comparatives-rules" class="slide-section bg-slate-800 relative z-10">
         <div class="max-w-5xl mx-auto w-full">
             <h2 class="text-4xl md:text-5xl font-bold title-font text-rose-500 mb-4 text-center">
@@ -560,6 +486,7 @@
         </div>
     </section>
 
+    <!-- Section 5: Emphasizing Comparatives -->
     <section id="comparatives" class="slide-section bg-slate-900 relative z-10">
         <div class="max-w-5xl mx-auto w-full">
             <h2 class="text-4xl md:text-5xl font-bold title-font text-red-400 mb-8 text-center">
@@ -678,52 +605,66 @@
         </div>
     </section>
 
-    <section id="closing" class="slide-section bg-gradient-to-t from-slate-900 via-indigo-900/30 to-slate-900 relative z-10">
-        <div class="max-w-5xl mx-auto w-full text-center">
+    <!-- Section 6: Recap & Exit Ticket -->
+    <section id="summary" class="slide-section bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-900 relative z-10">
+        <div class="max-w-5xl mx-auto w-full">
+            <h2 class="text-4xl md:text-5xl font-bold title-font text-blue-400 mb-8 text-center">
+                Today's Recap
+            </h2>
             
-            <!-- Summary -->
-            <h2 class="text-4xl md:text-5xl font-bold title-font text-emerald-400 mb-6"><i class="fas fa-flag-checkered mr-3"></i> Class Dismissed!</h2>
-            
-            <div class="bg-slate-800/80 p-8 rounded-2xl border border-emerald-500/30 shadow-lg mb-8 max-w-3xl mx-auto text-left">
-                <h3 class="text-2xl font-bold text-white mb-6 text-center border-b border-slate-600 pb-4">Today's Recap</h3>
-                <ul class="space-y-4 text-slate-300 font-medium grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-                    <li class="flex items-center gap-3"><i class="fas fa-tv text-emerald-500 text-xl"></i> TV Vocabulary</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-calendar-alt text-emerald-500 text-xl"></i> Future Plans (Will, Going To, Pres. Cont.)</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-puzzle-piece text-emerald-500 text-xl"></i> Compound Adjectives</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-balance-scale-right text-emerald-500 text-xl"></i> Emphasizing Comparatives</li>
-                </ul>
-            </div>
-
-            <!-- Exit Ticket -->
-            <div class="bg-indigo-900/40 p-8 rounded-3xl border border-indigo-500/40 shadow-xl max-w-3xl mx-auto mb-10">
-                <h3 class="text-2xl font-bold text-indigo-300 mb-2"><i class="fas fa-ticket-alt mr-2"></i> Exit Ticket</h3>
-                <p class="text-slate-300 mb-6 text-lg">Before you go, rate today's review and write one sentence about a TV show or movie you are going to watch this weekend. Try to use a <strong>Compound Adjective</strong> or a <strong>Comparative</strong>!</p>
-                
-                <div class="flex justify-center gap-2 mb-6 text-3xl text-slate-500 star-rating" id="star-container">
-                    <i class="fas fa-star" onclick="rateClass(1)"></i>
-                    <i class="fas fa-star" onclick="rateClass(2)"></i>
-                    <i class="fas fa-star" onclick="rateClass(3)"></i>
-                    <i class="fas fa-star" onclick="rateClass(4)"></i>
-                    <i class="fas fa-star" onclick="rateClass(5)"></i>
+            <!-- Recap boxes -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 text-center">
+                <div class="bg-slate-800 p-4 rounded-xl border border-orange-500/30">
+                    <i class="fas fa-tv text-2xl text-orange-400 mb-2"></i>
+                    <h4 class="text-white font-bold">TV Vocab</h4>
+                    <p class="text-xs text-slate-400 mt-1">Host, Producers, Season...</p>
                 </div>
-
-                <textarea class="w-full bg-slate-800/80 border-2 border-indigo-400/50 rounded-xl p-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 transition-colors resize-none mb-4" rows="3" placeholder="E.g., I am going to watch a well-known series. It is much better than a soap opera..."></textarea>
+                <div class="bg-slate-800 p-4 rounded-xl border border-emerald-500/30">
+                    <i class="fas fa-calendar-alt text-2xl text-emerald-400 mb-2"></i>
+                    <h4 class="text-white font-bold">Future Plans</h4>
+                    <p class="text-xs text-slate-400 mt-1">Will, Going to, Present Cont.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-purple-500/30">
+                    <i class="fas fa-puzzle-piece text-2xl text-purple-400 mb-2"></i>
+                    <h4 class="text-white font-bold">Compound Adjs.</h4>
+                    <p class="text-xs text-slate-400 mt-1">Well-known, short-tempered...</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-red-500/30">
+                    <i class="fas fa-balance-scale-right text-2xl text-red-400 mb-2"></i>
+                    <h4 class="text-white font-bold">Emph. Comparatives</h4>
+                    <p class="text-xs text-slate-400 mt-1">Much, a lot, a bit, just as...</p>
+                </div>
+            </div>
+            
+            <!-- Exit Ticket -->
+            <div class="bg-slate-800/80 p-8 rounded-3xl border border-blue-500/50 shadow-2xl max-w-3xl mx-auto" id="exit-form">
+                <h3 class="text-2xl font-bold text-white mb-2"><i class="fas fa-ticket-alt text-amber-400 mr-2"></i> Exit Ticket</h3>
+                <p class="text-slate-400 mb-6">Write a sentence about your future using a <span class="text-purple-400 font-bold">compound adjective</span> OR an <span class="text-red-400 font-bold">emphasizing comparative</span>.</p>
                 
-                <button onclick="submitExitTicket()" id="exit-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all hover:scale-105">
-                    Submit & Finish
-                </button>
+                <textarea id="exit-ticket-input" class="w-full bg-slate-900 border-2 border-slate-600 rounded-xl p-4 text-white focus:border-blue-500 outline-none resize-none mb-2" rows="3" placeholder="Example: I am going to be a well-known doctor. / My future car will be much faster than yours."></textarea>
+                
+                <!-- Feedback warning in case of empty submit -->
+                <p id="exit-warning" class="text-red-400 text-sm font-bold hidden mb-4"><i class="fas fa-exclamation-triangle"></i> Please, write a complete sentence to finish the class!</p>
+                
+                <div class="mt-4 text-center">
+                    <button onclick="submitExitTicket()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+                        Submit & Finish
+                    </button>
+                </div>
             </div>
 
-            <!-- Closing Message -->
-            <div id="closing-msg" class="hidden transform transition-all duration-500 scale-95 opacity-0">
-                <p class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 drop-shadow-md mb-4">
-                    Great job today! <br> Happy Studies! 🚀📚
-                </p>
-                <p class="text-slate-400 text-xl font-medium">Bons estudos e até a próxima aula!</p>
+            <!-- Goodbye Message (Hidden initially) -->
+            <div id="goodbye-msg" class="hidden text-center py-10">
+                <div class="inline-block animate-bounce mb-6">
+                    <i class="fas fa-graduation-cap text-6xl text-amber-400"></i>
+                </div>
+                <h2 class="text-4xl font-bold text-white mb-4">Great Job!</h2>
+                <p class="text-xl text-blue-300">Exit ticket successfully submitted. Have a wonderful week and keep studying!</p>
             </div>
         </div>
     </section>
 
+    <!-- Scripting for Interactivity -->
     <script>
         // Smooth scrolling & active dot update
         document.querySelectorAll('.nav-dot').forEach(anchor => {
@@ -823,6 +764,7 @@
         // -------------------------
         function validateInput(id, correctAnswers) {
             const input = document.getElementById(id);
+            if(!input) return;
             let val = input.value.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,!]/g, '');
             input.classList.remove('input-correct', 'input-incorrect');
             
@@ -849,52 +791,74 @@
         }
 
         // -------------------------
-        // Compound Adjectives Logic
+        // Compound Adjectives Logic (Click & Fill)
         // -------------------------
-        function toggleDropdown(id) {
-            document.querySelectorAll('.drop-options').forEach(el => {
-                if(el.id !== id) el.style.display = 'none';
+        let activeCompoundWord = null;
+        let activeWordBtn = null;
+
+        function selectCompoundWord(btn) {
+            // Deselect previous
+            document.querySelectorAll('.word-btn').forEach(b => {
+                b.classList.remove('bg-purple-600', 'border-purple-400');
+                b.classList.add('bg-slate-800', 'border-purple-500/50');
             });
-            const opt = document.getElementById(id);
-            opt.style.display = opt.style.display === 'flex' ? 'none' : 'flex';
-        }
 
-        function selectDrop(labelId, optId, value) {
-            const label = document.getElementById(labelId);
-            label.innerText = value;
-            label.classList.remove('text-green-400', 'text-red-400');
-            label.style.borderBottomColor = '#94a3b8';
-            document.getElementById(optId).style.display = 'none';
-        }
-
-        // Close dropdowns if clicked outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropzone') && !event.target.closest('.drop-options')) {
-                document.querySelectorAll('.drop-options').forEach(el => el.style.display = 'none');
+            // If clicking the already selected word, deselect it
+            if(activeWordBtn === btn) {
+                activeCompoundWord = null;
+                activeWordBtn = null;
+                return;
             }
-        });
+
+            // Select new word
+            btn.classList.remove('bg-slate-800', 'border-purple-500/50');
+            btn.classList.add('bg-purple-600', 'border-purple-400');
+            
+            activeCompoundWord = btn.getAttribute('data-word');
+            activeWordBtn = btn;
+        }
+
+        function fillBlank(btn) {
+            // If the blank already has a word and no new word is selected, clear the blank
+            if (btn.innerText !== '_____' && !activeCompoundWord) {
+                btn.innerText = '_____';
+                btn.classList.remove('border-solid', 'border-purple-400', 'text-green-400', 'text-red-400');
+                btn.classList.add('border-dashed', 'border-slate-400', 'text-purple-400');
+                return;
+            }
+
+            // If a word is selected, fill the blank
+            if (activeCompoundWord) {
+                btn.innerText = activeCompoundWord;
+                btn.classList.remove('border-dashed', 'border-slate-400', 'text-green-400', 'text-red-400');
+                btn.classList.add('border-solid', 'border-purple-400', 'text-purple-400');
+            }
+        }
 
         const adjAnswers = {
-            'lbl-adj-a': 'thought-provoking',
-            'lbl-adj-b': 'well-mannered',
-            'lbl-adj-c': 'well-known',
-            'lbl-adj-d': 'short-tempered',
-            'lbl-adj-e': 'best-selling'
+            'ans-a': 'thought-provoking',
+            'ans-b': 'well-mannered',
+            'ans-c': 'well-known',
+            'ans-d': 'short-tempered',
+            'ans-e': 'best-selling'
         };
 
         function checkAdjectives() {
             for(let id in adjAnswers) {
-                const el = document.getElementById(id);
+                const el = document.querySelector(`[data-id="${id}"]`);
+                if(!el) continue;
                 let text = el.innerText.trim(); 
+                
                 if(text === adjAnswers[id]) {
-                    el.classList.remove('text-red-400');
-                    el.classList.add('text-green-400');
-                    el.style.borderBottomColor = '#22c55e';
+                    el.classList.remove('text-purple-400', 'text-red-400', 'border-purple-400', 'border-red-400');
+                    el.classList.add('text-green-400', 'border-green-400');
                 } else {
+                    // Show correct answer
                     el.innerText = adjAnswers[id];
-                    el.classList.remove('text-green-400');
-                    el.classList.add('text-red-400');
-                    el.style.borderBottomColor = '#ef4444';
+                    el.classList.remove('text-purple-400', 'text-green-400', 'border-purple-400', 'border-green-400');
+                    el.classList.add('text-red-400', 'border-red-400', 'border-solid');
+                    
+                    // Shake animation
                     el.style.animation = 'shake 0.4s';
                     setTimeout(()=> el.style.animation = '', 400);
                 }
@@ -936,33 +900,19 @@
         // -------------------------
         // Exit Ticket Logic
         // -------------------------
-        function rateClass(stars) {
-            const container = document.getElementById('star-container');
-            const icons = container.querySelectorAll('i');
-            
-            icons.forEach((icon, index) => {
-                if (index < stars) {
-                    icon.classList.add('star-selected');
-                } else {
-                    icon.classList.remove('star-selected');
-                }
-            });
-        }
-
         function submitExitTicket() {
-            const btn = document.getElementById('exit-btn');
-            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submitted!';
-            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
-            btn.classList.add('bg-emerald-500', 'pointer-events-none');
+            const input = document.getElementById('exit-ticket-input');
+            const warning = document.getElementById('exit-warning');
             
-            const msg = document.getElementById('closing-msg');
-            msg.classList.remove('hidden');
-            
-            // Allow display block to render before applying opacity transition
-            setTimeout(() => {
-                msg.classList.remove('scale-95', 'opacity-0');
-                msg.classList.add('scale-100', 'opacity-100');
-            }, 100);
+            if(input.value.trim().length > 10) {
+                warning.classList.add('hidden');
+                document.getElementById('exit-form').classList.add('hidden');
+                document.getElementById('goodbye-msg').classList.remove('hidden');
+            } else {
+                warning.classList.remove('hidden');
+                input.classList.add('border-red-500');
+                setTimeout(() => input.classList.remove('border-red-500'), 2000);
+            }
         }
     </script>
 </body>
